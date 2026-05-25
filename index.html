@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotify Fan Stats & Global Ranking</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts (Plus Jakarta Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            spotify: {
+              green: '#1DB954',
+              dark: '#121212',
+              lightDark: '#181818',
+              card: '#282828',
+              accent: '#1ed760'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #121212;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #282828;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #1DB954;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 15px rgba(29, 185, 84, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(29, 185, 84, 0.8);
+      }
+    }
+    .glow-btn {
+      animation: pulse-glow 3s infinite;
+    }
+    .vinyl-spin {
+      animation: spin 10s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-neutral-950 text-white font-sans min-h-screen flex flex-col justify-between selection:bg-spotify-green selection:text-black overflow-x-hidden">
+
+  <!-- TOP HEADER / NAV -->
+  <header class="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <svg class="w-8 h-8 text-spotify-green fill-current" viewBox="0 0 24 24">
+          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.438-5.305-1.764-8.785-.97-.333.075-.664-.135-.74-.467-.075-.333.136-.665.468-.742 3.807-.87 7.086-.5 9.71 1.104.293.18.385.563.204.858zm1.224-2.722c-.227.367-.707.487-1.074.26-2.69-1.654-6.79-2.134-9.967-1.17-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.637-1.103 8.156-.57 11.233 1.327.368.228.49.707.26 1.075zm.105-2.812C14.392 8.717 8.41 8.52 4.965 9.566c-.53.16-1.08-.142-1.24-.672-.16-.53.142-1.08.672-1.24 3.957-1.202 10.554-.97 14.59 1.427.477.283.632.9.348 1.377-.283.478-.9.632-1.377.348z"/>
+        </svg>
+        <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white to-neutral-400 bg-clip-text text-transparent">FanStat <span class="text-spotify-green">Pro</span></span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-xs bg-neutral-900 border border-neutral-800 text-neutral-400 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-spotify-green inline-block animate-pulse"></span>
+          Conexión Simulada
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8 sm:px-8">
+    
+    <!-- STEP 1: CONECTAR CUENTA (LANDING) -->
+    <section id="step-landing" class="block py-6 sm:py-12">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <!-- Text Hero -->
+        <div class="lg:col-span-7 space-y-6">
+          <span class="inline-flex items-center gap-1.5 bg-spotify-green/10 text-spotify-green border border-spotify-green/20 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
+            ¿Qué tan fanático eres realmente?
+          </span>
+          <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+            Descubre tu <span class="text-spotify-green underline decoration-wavy decoration-spotify-green/40">Ranking Mundial</span> de Fan en Spotify
+          </h1>
+          <p class="text-neutral-400 text-lg leading-relaxed">
+            Analiza tus artistas favoritos, calcula con precisión tu nivel de obsesión en comparación con oyentes de todo el planeta y obtén un análisis psicológico divertido de tu gusto musical generado por inteligencia artificial.
+          </p>
+          
+          <!-- Mock Inputs to Customize Simulation -->
+          <div class="bg-neutral-900/60 border border-neutral-800 p-6 rounded-2xl space-y-4 max-w-xl">
+            <h3 class="font-bold text-md text-neutral-200 flex items-center gap-2">
+              <i data-lucide="music-4" class="text-spotify-green w-5 h-5"></i>
+              Escribe tus 3 Artistas Favoritos Reales:
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <input type="text" id="artist1" placeholder="Ej. Bad Bunny" class="bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-spotify-green transition">
+              <input type="text" id="artist2" placeholder="Ej. Taylor Swift" class="bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-spotify-green transition">
+              <input type="text" id="artist3" placeholder="Ej. Metallica" class="bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-spotify-green transition">
+            </div>
+            <p class="text-xs text-neutral-500">
+              *Esto alimentará nuestro motor de análisis de IA para brindarte un diagnóstico único.
+            </p>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center pt-2">
+            <button onclick="startConnection()" class="glow-btn bg-spotify-green hover:bg-spotify-accent text-neutral-950 font-extrabold px-8 py-4 rounded-full text-lg tracking-wide flex items-center justify-center gap-3 transition transform hover:scale-[1.02]">
+              <i data-lucide="power" class="w-5 h-5 stroke-[2.5]"></i>
+              Conectar Cuenta de Spotify
+            </button>
+            <button onclick="scrollToFeatures()" class="bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-white font-semibold px-6 py-4 rounded-full flex items-center justify-center gap-2 transition">
+              Saber más
+            </button>
+          </div>
+        </div>
+
+        <!-- Graphic Asset -->
+        <div class="lg:col-span-5 flex justify-center relative">
+          <div class="absolute inset-0 bg-spotify-green/10 rounded-full blur-3xl -z-10 w-72 h-72 mx-auto my-auto"></div>
+          <div class="relative bg-neutral-900 border border-neutral-800 p-8 rounded-3xl w-full max-w-sm flex flex-col items-center shadow-2xl">
+            <!-- Simulated vinyl playing -->
+            <div class="relative w-48 h-48 rounded-full bg-neutral-950 border-4 border-neutral-800 flex items-center justify-center shadow-lg overflow-hidden">
+              <div class="absolute inset-2 border border-neutral-800/30 rounded-full"></div>
+              <div class="absolute inset-6 border border-neutral-800/30 rounded-full"></div>
+              <div class="absolute inset-10 border border-neutral-800/30 rounded-full"></div>
+              <div class="w-16 h-16 rounded-full bg-spotify-green/20 border border-spotify-green/40 flex items-center justify-center z-10">
+                <div class="w-4 h-4 rounded-full bg-spotify-green"></div>
+              </div>
+              <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300" alt="Vinyl cover" class="absolute inset-0 w-full h-full object-cover opacity-20 vinyl-spin">
+            </div>
+            <div class="mt-6 text-center space-y-1 w-full">
+              <h4 class="font-bold text-lg text-white">Analizador de Melómanos</h4>
+              <p class="text-neutral-400 text-sm">Estado: Listo para conectar</p>
+              <div class="flex gap-1 justify-center pt-2">
+                <span class="w-2 h-2 bg-neutral-700 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+                <span class="w-2 h-2 bg-neutral-700 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                <span class="w-2 h-2 bg-neutral-700 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Cards Section -->
+      <div id="features" class="mt-24 pt-12 border-t border-neutral-900 grid sm:grid-cols-3 gap-6">
+        <div class="bg-neutral-900/40 border border-neutral-900 p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-spotify-green/10 flex items-center justify-center text-spotify-green">
+            <i data-lucide="award" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-bold text-lg">Ranking de Fan Global</h3>
+          <p class="text-neutral-400 text-sm">Compara tu nivel de reproducción diario contra millones de oyentes del mismo artista.</p>
+        </div>
+        <div class="bg-neutral-900/40 border border-neutral-900 p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-spotify-green/10 flex items-center justify-center text-spotify-green">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-bold text-lg">Análisis Psicológico IA</h3>
+          <p class="text-neutral-400 text-sm">Nuestra IA Gemini evalúa tu selección de música y genera una radiografía divertida de tu personalidad.</p>
+        </div>
+        <div class="bg-neutral-900/40 border border-neutral-900 p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-spotify-green/10 flex items-center justify-center text-spotify-green">
+            <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-bold text-lg">Trivia Desafío de Fan</h3>
+          <p class="text-neutral-400 text-sm">Responde preguntas dinámicas sobre tus ídolos y aumenta tu rango para presumir en tus redes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: LOADING / SIMULANDO CONEXIÓN -->
+    <section id="step-loading" class="hidden py-16 flex flex-col items-center justify-center text-center max-w-xl mx-auto space-y-8">
+      <div class="relative w-28 h-28 flex items-center justify-center">
+        <!-- Outer loading ring -->
+        <div class="absolute inset-0 rounded-full border-4 border-spotify-green/20 border-t-spotify-green animate-spin"></div>
+        <i data-lucide="spotify" class="w-12 h-12 text-spotify-green animate-pulse"></i>
+      </div>
+      <div class="space-y-3">
+        <h2 class="text-2xl font-bold">Iniciando handshake seguro...</h2>
+        <p id="loading-subtext" class="text-neutral-400 text-sm animate-pulse">Esperando autorización de credenciales...</p>
+      </div>
+      <!-- Progress Bar -->
+      <div class="w-full bg-neutral-900 h-2 rounded-full overflow-hidden border border-neutral-800">
+        <div id="loading-progress" class="bg-spotify-green h-full w-0 transition-all duration-300 ease-out"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 w-full text-left pt-4">
+        <div id="check-auth" class="flex items-center gap-2 text-neutral-500 text-xs">
+          <i data-lucide="circle" class="w-4 h-4 text-neutral-600"></i> Token de Spotify
+        </div>
+        <div id="check-history" class="flex items-center gap-2 text-neutral-500 text-xs">
+          <i data-lucide="circle" class="w-4 h-4 text-neutral-600"></i> Historial de Escucha (6 meses)
+        </div>
+        <div id="check-stats" class="flex items-center gap-2 text-neutral-500 text-xs">
+          <i data-lucide="circle" class="w-4 h-4 text-neutral-600"></i> Métricas Acústicas de Canciones
+        </div>
+        <div id="check-ai" class="flex items-center gap-2 text-neutral-500 text-xs">
+          <i data-lucide="circle" class="w-4 h-4 text-neutral-600"></i> Gemini AI Analyzer
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: DASHBOARD DE RESULTADOS -->
+    <section id="step-dashboard" class="hidden space-y-8 animate-fade-in">
+      <!-- Welcome & Overall Fan Rank Hero Card -->
+      <div class="bg-gradient-to-br from-spotify-green/20 via-neutral-900 to-neutral-950 border border-spotify-green/30 rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+        <div class="absolute right-0 bottom-0 opacity-10 translate-y-1/4 translate-x-1/4 pointer-events-none">
+          <svg class="w-96 h-96 text-spotify-green fill-current" viewBox="0 0 24 24">
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 14.5c-2.48 0-4.5-2.02-4.5-4.5s2.02-4.5 4.5-4.5 4.5 2.02 4.5 4.5-2.02 4.5-4.5 4.5z"/>
+          </svg>
+        </div>
+        
+        <div class="grid md:grid-cols-12 gap-8 items-center relative z-10">
+          <div class="md:col-span-8 space-y-4">
+            <div class="flex items-center gap-3">
+              <span class="bg-spotify-green text-neutral-950 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">CUENTA CONECTADA</span>
+              <span id="user-display" class="text-neutral-300 font-medium">@melomano_anonimo</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-black leading-tight">
+              ¡Tu obsesión musical ha sido indexada!
+            </h2>
+            <p class="text-neutral-300 max-w-2xl text-sm sm:text-base">
+              Nuestros algoritmos analizaron tu historial de reproducción y tu selección predilecta de artistas. Este es el veredicto sobre tu devoción.
+            </p>
+          </div>
+          
+          <!-- Large Ranking Display Badge -->
+          <div class="md:col-span-4 flex justify-center">
+            <div class="bg-neutral-950/80 border border-spotify-green/40 p-6 rounded-2xl text-center w-full max-w-xs shadow-2xl relative group hover:border-spotify-green transition-all">
+              <span class="text-xs text-neutral-400 font-semibold uppercase tracking-wider block mb-1">Ranking Mundial</span>
+              <!-- Dynamically generated global percent -->
+              <div id="global-percent" class="text-4xl sm:text-5xl font-extrabold text-spotify-green tracking-tight my-2">Top 0.02%</div>
+              <p class="text-xs text-neutral-400 mt-1">de fans en todo el planeta</p>
+              <div class="mt-4 inline-flex items-center gap-1.5 bg-spotify-green/10 text-spotify-green px-3 py-1.5 rounded-xl text-xs font-semibold">
+                <i data-lucide="crown" class="w-3.5 h-3.5"></i>
+                <span id="fan-tier-title">Superfan de Élite</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Statistics Grid -->
+      <div class="grid lg:grid-cols-3 gap-8">
+        
+        <!-- COLUMN 1: YOUR TOP ARTISTS -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold flex items-center gap-2">
+              <i data-lucide="list-music" class="text-spotify-green w-5 h-5"></i>
+              Tus Artistas Más Escuchados (Top 3)
+            </h3>
+            <span class="text-xs text-neutral-400">Generado de tu actividad</span>
+          </div>
+
+          <div id="artists-container" class="space-y-4">
+            <!-- Artist 1 Card -->
+            <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl flex items-center gap-4 hover:border-neutral-700 transition">
+              <div class="text-2xl font-black text-spotify-green w-8">#1</div>
+              <div class="w-12 h-12 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-center text-spotify-green">
+                <i data-lucide="user" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-grow">
+                <h4 id="top-artist-1-name" class="font-bold text-lg">Artista 1</h4>
+                <p id="top-artist-1-sub" class="text-xs text-neutral-400">Escuchado 2,490 veces • Canción favorita recomendada</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded-full font-semibold">Top 0.05%</span>
+              </div>
+            </div>
+
+            <!-- Artist 2 Card -->
+            <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl flex items-center gap-4 hover:border-neutral-700 transition">
+              <div class="text-2xl font-black text-neutral-600 w-8">#2</div>
+              <div class="w-12 h-12 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-center text-neutral-400">
+                <i data-lucide="user" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-grow">
+                <h4 id="top-artist-2-name" class="font-bold text-lg">Artista 2</h4>
+                <p id="top-artist-2-sub" class="text-xs text-neutral-400">Escuchado 1,821 veces • Nivel de adicción alto</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded-full font-semibold">Top 0.45%</span>
+              </div>
+            </div>
+
+            <!-- Artist 3 Card -->
+            <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl flex items-center gap-4 hover:border-neutral-700 transition">
+              <div class="text-2xl font-black text-neutral-600 w-8">#3</div>
+              <div class="w-12 h-12 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-center text-neutral-400">
+                <i data-lucide="user" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-grow">
+                <h4 id="top-artist-3-name" class="font-bold text-lg">Artista 3</h4>
+                <p id="top-artist-3-sub" class="text-xs text-neutral-400">Escuchado 980 veces • Escuchador asiduo</p>
+              </div>
+              <div class="text-right">
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded-full font-semibold">Top 1.2%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Gemini AI Opinion Box -->
+          <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-4">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                  <i data-lucide="brain-circuit" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm">Gemini AI Music Critic</h4>
+                  <p class="text-[10px] text-neutral-400">Modelo: gemini-2.5-flash-preview-09-2025</p>
+                </div>
+              </div>
+              <button onclick="generateAiReview()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-hover"></i>
+                Análisis Completo
+              </button>
+            </div>
+            
+            <div id="ai-review-content" class="text-sm text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800/60 min-h-[100px] flex items-center justify-center text-center">
+              <div>
+                <p class="text-neutral-500 text-xs">Presiona el botón para que Gemini analice tu nivel de fanatismo y tu gusto musical con precisión quirúrgica.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMN 2: CHALLENGE / INTERACTIVES -->
+        <div class="space-y-6">
+          <!-- Quiz / Trivia Game Card to improve ranking -->
+          <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="swatch-book" class="text-spotify-green w-5 h-5"></i>
+              <h3 class="font-bold text-lg">Reto de Superfan</h3>
+            </div>
+            <p class="text-neutral-400 text-xs">
+              Sube de ranking respondiendo preguntas clave de tu artista número uno (<span class="text-spotify-green font-bold" id="quiz-artist-name">Artista</span>). ¡Consigue más de 300 puntos para coronarte como Fan #1 absoluto!
+            </p>
+
+            <div id="quiz-box" class="bg-neutral-950 p-4 rounded-xl border border-neutral-800 space-y-4">
+              <!-- Question -->
+              <div>
+                <span class="text-[10px] bg-neutral-800 text-neutral-400 px-2 py-0.5 rounded-full font-semibold" id="quiz-question-number">Pregunta 1 de 3</span>
+                <p class="text-sm font-semibold mt-2" id="quiz-question-text">Cargando pregunta del quiz...</p>
+              </div>
+              <!-- Options -->
+              <div class="space-y-2" id="quiz-options-container">
+                <!-- Dynamically populated options -->
+              </div>
+            </div>
+
+            <!-- User Fan Score Badge -->
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-neutral-400">Tu Score de Trivia:</span>
+              <span class="font-bold text-spotify-green" id="user-score-display">0 Puntos</span>
+            </div>
+          </div>
+
+          <!-- Share Certificate Button & Action Options -->
+          <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 text-center space-y-4">
+            <h4 class="font-bold">¿Quieres presumir tus resultados?</h4>
+            <p class="text-neutral-400 text-xs">Genera tu tarjeta oficial de fan certificado para compartirla con tus amigos en Instagram o Twitter.</p>
+            
+            <button onclick="openCertificateModal()" class="w-full bg-spotify-green hover:bg-spotify-accent text-neutral-950 font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              Generar Tarjeta de Fan
+            </button>
+            <button onclick="resetApp()" class="w-full bg-neutral-950 hover:bg-neutral-900 text-neutral-400 font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              Desconectar Cuenta
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: FAN CERTIFICATE -->
+  <div id="cert-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-neutral-950 border border-neutral-800 rounded-3xl max-w-sm w-full p-6 relative space-y-6 shadow-2xl">
+      <button onclick="closeCertificateModal()" class="absolute right-4 top-4 text-neutral-500 hover:text-white transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center">
+        <h3 class="font-bold text-lg">Tarjeta de Certificación de Fan</h3>
+        <p class="text-neutral-400 text-xs">Usa una captura de pantalla para compartirla en redes</p>
+      </div>
+
+      <!-- Simulated Certificate Graphic -->
+      <div id="certificate-graphic" class="bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 border-2 border-spotify-green p-6 rounded-2xl text-center space-y-6 relative overflow-hidden">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-spotify-green/10 flex items-center justify-center">
+          <i data-lucide="award" class="text-spotify-green/20 w-12 h-12"></i>
+        </div>
+        
+        <div class="space-y-1">
+          <span class="text-[9px] uppercase tracking-wider text-spotify-green font-bold">Oficial Spotify Fan Analyzer</span>
+          <h4 class="text-xl font-extrabold" id="cert-user-name">@melomano</h4>
+        </div>
+
+        <div class="py-4 border-y border-neutral-800/80 space-y-2">
+          <p class="text-xs text-neutral-400">Clasificado mundialmente en el grupo elite de:</p>
+          <div class="text-2xl font-black text-spotify-green tracking-tight" id="cert-artist">Bad Bunny</div>
+          <div class="text-base font-bold text-white" id="cert-percent">Top 0.02% de Fans</div>
+        </div>
+
+        <div class="flex justify-between items-center text-[10px] text-neutral-500">
+          <span>Emitido: Mayo 2026</span>
+          <span class="text-spotify-green font-semibold">CÓDIGO: FN-8291-SP</span>
+        </div>
+      </div>
+
+      <p class="text-xs text-neutral-400 text-center italic">"Un gran melómano conlleva una gran responsabilidad."</p>
+
+      <button onclick="closeCertificateModal()" class="w-full bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-white font-bold py-3 rounded-xl text-sm transition">
+        Cerrar Ventana
+      </button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-neutral-900 bg-neutral-950 py-6 px-4 text-center text-xs text-neutral-500">
+    <div class="max-w-7xl mx-auto space-y-2">
+      <p>FanStat Pro no está afiliado, patrocinado ni avalado oficialmente por Spotify AB.</p>
+      <p>&copy; 2026 FanStat Pro. Powered by Gemini Flash 2.5.</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    // State management
+    const state = {
+      artists: [],
+      userName: 'melomano_anonimo',
+      globalRankPercent: '0.01%',
+      fanTierTitle: 'Superfan Legendario',
+      score: 0,
+      currentQuestionIndex: 0,
+      quizArtist: '',
+      quizData: []
+    };
+
+    // Simulated Spotify authentication steps
+    const connectionSteps = [
+      { text: "Estableciendo conexión con Spotify...", delay: 800, progress: 20, doneId: "check-auth" },
+      { text: "Descargando caché del historial de reproducción...", delay: 1000, progress: 45, doneId: "check-history" },
+      { text: "Calculando algoritmos acústicos de tus temas favoritos...", delay: 1200, progress: 70, doneId: "check-stats" },
+      { text: "Invocando el modelo de análisis Gemini Flash 2.5...", delay: 1000, progress: 95, doneId: "check-ai" },
+      { text: "Generando tu dashboard exclusivo...", delay: 600, progress: 100, doneId: "" }
+    ];
+
+    // Basic Trivia options pool based on user selection
+    function buildDynamicQuiz(artistName) {
+      return [
+        {
+          question: `¿Cuál fue el primer sencillo oficial de ${artistName} que rompió récords internacionales?`,
+          options: ["El primer single debut oficial", "Una colaboración de su primer álbum", "Un demo misterioso subido a SoundCloud", "El tema principal de su gira original"],
+          correctIndex: 1
+        },
+        {
+          question: `¿Cuál es el color o vibra artística que mejor representa la estética general de ${artistName}?`,
+          options: ["Minimalista y melancólico", "Luminoso y tropical", "Psicodélico e introspectivo", "Eléctrico e industrial"],
+          correctIndex: 2
+        },
+        {
+          question: `Si pudieras pasar 24 horas en el estudio con ${artistName}, ¿qué harían principalmente?`,
+          options: ["Escribir rimas o letras experimentales", "Probar sintetizadores vintage y ritmos analógicos", "Afinar voces con técnicas avanzadas de procesamiento", "Hablar de la vida y componer un hit inesperado"],
+          correctIndex: 3
+        }
+      ];
+    }
+
+    // Scroll function for "Saber más" button
+    function scrollToFeatures() {
+      const element = document.getElementById('features');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Initiates Connection flow
+    function startConnection() {
+      // Gather inputs
+      const a1 = document.getElementById('artist1').value.trim() || 'Bad Bunny';
+      const a2 = document.getElementById('artist2').value.trim() || 'Taylor Swift';
+      const a3 = document.getElementById('artist3').value.trim() || 'Daft Punk';
+
+      state.artists = [a1, a2, a3];
+      state.quizArtist = a1; // Set quiz topic to the main artist
+      state.quizData = buildDynamicQuiz(a1);
+
+      // Randomize global rank values
+      const rankDec = (Math.random() * 0.1).toFixed(3);
+      state.globalRankPercent = `Top ${rankDec}%`;
+
+      // Determine Fan Tier Title
+      if (parseFloat(rankDec) < 0.02) {
+        state.fanTierTitle = "Fanático Galáctico Extremo";
+      } else if (parseFloat(rankDec) < 0.06) {
+        state.fanTierTitle = "Superfan Certificado de Élite";
+      } else {
+        state.fanTierTitle = "Melómano Purista Consagrado";
+      }
+
+      // Hide Landing, Show Loading
+      document.getElementById('step-landing').classList.add('hidden');
+      document.getElementById('step-loading').classList.remove('hidden');
+
+      // Execute connection simulation
+      executeStep(0);
+    }
+
+    // Recursive connection step simulator
+    function executeStep(index) {
+      if (index >= connectionSteps.length) {
+        // Complete! Render Dashboard
+        setTimeout(() => {
+          renderDashboard();
+        }, 500);
+        return;
+      }
+
+      const step = connectionSteps[index];
+      document.getElementById('loading-subtext').innerText = step.text;
+      document.getElementById('loading-progress').style.width = `${step.progress}%`;
+
+      if (step.doneId) {
+        const checkEl = document.getElementById(step.doneId);
+        if (checkEl) {
+          checkEl.classList.remove('text-neutral-500');
+          checkEl.classList.add('text-spotify-green', 'font-semibold');
+          // Swap icon
+          checkEl.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-spotify-green"></i> ${checkEl.innerText}`;
+          lucide.createIcons();
+        }
+      }
+
+      setTimeout(() => {
+        executeStep(index + 1);
+      }, step.delay);
+    }
+
+    // Render Dashboard with Data
+    function renderDashboard() {
+      document.getElementById('step-loading').classList.add('hidden');
+      document.getElementById('step-dashboard').classList.remove('hidden');
+
+      // Setup customized fields
+      document.getElementById('top-artist-1-name').innerText = state.artists[0];
+      document.getElementById('top-artist-2-name').innerText = state.artists[1];
+      document.getElementById('top-artist-3-name').innerText = state.artists[2];
+
+      document.getElementById('top-artist-1-sub').innerText = `Escuchado ${Math.floor(Math.random() * 1000 + 1500)} veces • Nivel de adicción Máximo`;
+      document.getElementById('top-artist-2-sub').innerText = `Escuchado ${Math.floor(Math.random() * 800 + 1000)} veces • Esencial en tu biblioteca`;
+      document.getElementById('top-artist-3-sub').innerText = `Escuchado ${Math.floor(Math.random() * 500 + 500)} veces • Tendencia en tus semanas`;
+
+      document.getElementById('global-percent').innerText = state.globalRankPercent;
+      document.getElementById('fan-tier-title').innerText = state.fanTierTitle;
+      document.getElementById('quiz-artist-name').innerText = state.artists[0];
+
+      // Reset trivia and render first question
+      state.score = 0;
+      state.currentQuestionIndex = 0;
+      document.getElementById('user-score-display').innerText = "0 Puntos";
+      renderQuizQuestion();
+
+      lucide.createIcons();
+    }
+
+    // Trivia Rendering Engine
+    function renderQuizQuestion() {
+      const qNum = state.currentQuestionIndex;
+      if (qNum >= state.quizData.length) {
+        // Quiz Finished!
+        document.getElementById('quiz-box').innerHTML = `
+          <div class="text-center py-4 space-y-3">
+            <i data-lucide="party-popper" class="w-12 h-12 text-spotify-green mx-auto"></i>
+            <h4 class="font-bold text-base">¡Desafío Completado!</h4>
+            <p class="text-xs text-neutral-300">Has demostrado un conocimiento estelar con un puntaje de:</p>
+            <div class="text-2xl font-black text-spotify-green">${state.score} Puntos</div>
+            <button onclick="restartQuiz()" class="mt-2 bg-neutral-900 border border-neutral-800 text-xs px-3 py-1.5 rounded-lg text-neutral-300 hover:text-white transition">
+              Reintentar Desafío
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      const questionObj = state.quizData[qNum];
+      document.getElementById('quiz-question-number').innerText = `Pregunta ${qNum + 1} de 3`;
+      document.getElementById('quiz-question-text').innerText = questionObj.question;
+
+      const optionsContainer = document.getElementById('quiz-options-container');
+      optionsContainer.innerHTML = '';
+
+      questionObj.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left bg-neutral-900 hover:bg-neutral-800 border border-neutral-800/80 p-3 rounded-xl text-xs font-medium transition flex items-center justify-between";
+        btn.innerHTML = `<span>${opt}</span> <i data-lucide="chevron-right" class="w-3 h-3 text-neutral-500"></i>`;
+        btn.onclick = () => selectOption(idx, questionObj.correctIndex);
+        optionsContainer.appendChild(btn);
+      });
+
+      lucide.createIcons();
+    }
+
+    function selectOption(selectedIndex, correctIndex) {
+      if (selectedIndex === correctIndex) {
+        state.score += 150;
+        // Visual reward
+        document.getElementById('user-score-display').innerText = `${state.score} Puntos`;
+        // Show success animation or sound if applicable
+      } else {
+        state.score += 30; // Consolation points
+        document.getElementById('user-score-display').innerText = `${state.score} Puntos`;
+      }
+
+      state.currentQuestionIndex++;
+      renderQuizQuestion();
+    }
+
+    function restartQuiz() {
+      state.score = 0;
+      state.currentQuestionIndex = 0;
+      document.getElementById('user-score-display').innerText = "0 Puntos";
+      
+      // Restore quiz box HTML
+      document.getElementById('quiz-box').innerHTML = `
+        <div>
+          <span class="text-[10px] bg-neutral-800 text-neutral-400 px-2 py-0.5 rounded-full font-semibold" id="quiz-question-number">Pregunta 1 de 3</span>
+          <p class="text-sm font-semibold mt-2" id="quiz-question-text">Cargando...</p>
+        </div>
+        <div class="space-y-2" id="quiz-options-container"></div>
+      `;
+      renderQuizQuestion();
+    }
+
+    // Modal Control
+    function openCertificateModal() {
+      document.getElementById('cert-user-name').innerText = `@${state.userName}`;
+      document.getElementById('cert-artist').innerText = state.artists[0];
+      document.getElementById('cert-percent').innerText = `${state.globalRankPercent} de Fans de Élite`;
+
+      document.getElementById('cert-modal').classList.remove('hidden');
+    }
+
+    function closeCertificateModal() {
+      document.getElementById('cert-modal').classList.add('hidden');
+    }
+
+    // Back-to-start reset
+    function resetApp() {
+      document.getElementById('step-dashboard').classList.add('hidden');
+      document.getElementById('step-landing').classList.remove('hidden');
+      
+      // Clear inputs slightly
+      document.getElementById('artist1').value = '';
+      document.getElementById('artist2').value = '';
+      document.getElementById('artist3').value = '';
+    }
+
+    // ==========================================
+    // GEMINI 2.5 FLASH CRITIC INTEGRATION ENGINE
+    // ==========================================
+    const apiKey = ""; // Runtime populated key via execution sandbox
+
+    // Exponential Backoff Fetch Implementation
+    async function fetchWithBackoff(url, options, retries = 5, delay = 1000) {
+      try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        if (retries > 0) {
+          // Delay doubles each retry
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return fetchWithBackoff(url, options, retries - 1, delay * 2);
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    async function generateAiReview() {
+      const container = document.getElementById('ai-review-content');
+      
+      // Show dynamic interactive loader
+      container.innerHTML = `
+        <div class="flex flex-col items-center justify-center space-y-3 py-6">
+          <div class="w-8 h-8 rounded-full border-2 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
+          <p class="text-xs text-indigo-400 animate-pulse font-medium">Gemini está analizando la psique de tu biblioteca musical...</p>
+        </div>
+      `;
+
+      const promptText = `
+        Analiza a un usuario de Spotify cuyos 3 artistas favoritos principales son:
+        1. ${state.artists[0]} (Su favorito absoluto)
+        2. ${state.artists[1]}
+        3. ${state.artists[2]}
+        
+        Haz un comentario divertido, ligeramente sarcástico, con humor negro, ingenioso pero halagador en español. 
+        Explica por qué esta combinación de artistas revela que es un melómano apasionado, define un "Título de Fan" gracioso para el usuario, 
+        y mencionale una predicción absurda sobre su futuro musical. Responde en un tono jovial, dinámico, usando formato de párrafos pequeños. Max 150 palabras.
+      `;
+
+      const systemPrompt = "Eres un crítico de música experto y sarcástico de una revista prestigiosa de música alternativa. Te encanta clasificar los gustos de los usuarios de Spotify con un toque de humor irreverente pero amigable.";
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+      const requestBody = {
+        contents: [{ parts: [{ text: promptText }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] }
+      };
+
+      try {
+        const result = await fetchWithBackoff(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (generatedText) {
+          // Format with simple markdown replacements
+          let formattedText = generatedText
+            .replace(/\n\n/g, '<br><br>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-spotify-green">$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em class="text-neutral-300">$1</em>');
+
+          container.innerHTML = `
+            <div class="text-left space-y-2">
+              <p class="text-xs text-neutral-400 border-b border-neutral-800 pb-2 mb-2 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Diagnóstico Generado Exitosamente
+              </p>
+              <div class="text-sm leading-relaxed text-neutral-200">${formattedText}</div>
+            </div>
+          `;
+        } else {
+          throw new Error("No candidates received from Gemini API");
+        }
+
+      } catch (error) {
+        // Fallback error rendering without console logs
+        container.innerHTML = `
+          <div class="text-center space-y-2 text-rose-400 py-4">
+            <i data-lucide="alert-triangle" class="w-8 h-8 mx-auto text-rose-500"></i>
+            <h5 class="font-bold text-sm">No pudimos conectar con el servidor de análisis</h5>
+            <p class="text-[11px] text-neutral-400 max-w-xs mx-auto">La red está experimentando sobrecarga. Por favor intenta presionar el botón de análisis completo de nuevo en unos segundos.</p>
+          </div>
+        `;
+        lucide.createIcons();
+      }
+    }
+
+    // Initialize Lucide icons on start
+    window.onload = function() {
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>
